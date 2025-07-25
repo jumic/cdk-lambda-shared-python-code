@@ -8,10 +8,9 @@ import { LayerStack } from '../lib/layer-stack';
 const app = new cdk.App();
 const layerStack = new LayerStack(app, 'LayerStack')
 
-new Component1Stack(app, 'Componenet1Stack', {
-  layer: layerStack.layer,
-});
+const componenet1Stack = new Component1Stack(app, 'Componenet1Stack');
 
-new Component2Stack(app, 'Componenet2Stack', {
-  layer: layerStack.layer,
-});
+const componenet2Stack = new Component2Stack(app, 'Componenet2Stack');
+
+componenet1Stack.addDependency(layerStack);
+componenet2Stack.addDependency(layerStack);

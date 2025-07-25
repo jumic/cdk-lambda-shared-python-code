@@ -4,14 +4,19 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 
 export class LayerStack extends cdk.Stack {
-  layer: lambda.LayerVersion;
+  static LAYER_ARN_PARAMETER_NAME = '/layer/arn';
 
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    this.layer = new lambda.LayerVersion(this, 'SharedLayer', {
+    const layer = new lambda.LayerVersion(this, 'SharedLayer', {
       compatibleRuntimes: [lambda.Runtime.PYTHON_3_13],
       code: lambda.Code.fromAsset('src/layer'),
+    });
+
+    new ssm.StringParameter(this, 'LayerArn', {
+      parameterName: LayerStack.LAYER_ARN_PARAMETER_NAME,
+      stringValue: layer.layerVersionArn,
     });
 
   }
